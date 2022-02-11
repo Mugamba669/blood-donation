@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "348093222868",
+    "project_id": "donation-39da7",
+    "storage_bucket": "donation-39da7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348093222868:android:9acf2fa5b44efc5deb5041",
+        "android_client_info": {
+          "package_name": "com.example.blood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348093222868-gc1hatapt9562loe5o56vg352vk2tq01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoRlGI0kAyPZiv6CLOja55iv_FkoAT7MM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348093222868-gc1hatapt9562loe5o56vg352vk2tq01.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "348093222868-08egds4spr7aackdvtif90q9nsmsi203.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ios.app.blood"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
