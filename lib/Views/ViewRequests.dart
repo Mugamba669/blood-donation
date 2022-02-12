@@ -1,3 +1,4 @@
+import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/models/Request.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _ViewRequestsState extends State<ViewRequests> {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         toolbarHeight: 100,
         backgroundColor: Colors.transparent,
@@ -26,7 +28,8 @@ class _ViewRequestsState extends State<ViewRequests> {
             Icons.arrow_back_ios_new_rounded,
           ),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const Client()));
           },
         ),
         title: const Text("View Request"),

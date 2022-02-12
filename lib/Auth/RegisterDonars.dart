@@ -26,6 +26,7 @@ class _RegisterDonarState extends State<RegisterDonar> {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         leading: InkWell(
           onTap: () => Navigator.pop(context),

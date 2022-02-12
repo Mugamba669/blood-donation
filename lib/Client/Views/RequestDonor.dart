@@ -1,57 +1,49 @@
+import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/models/Request.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestDonor extends StatefulWidget {
-  RequestDonor({Key? key}) : super(key: key);
+  const RequestDonor({Key? key}) : super(key: key);
 
   @override
   State<RequestDonor> createState() => _RequestDonorState();
 }
 
 class _RequestDonorState extends State<RequestDonor> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  signOut() async {
-    Navigator.pop(context);
-    await auth.signOut();
-  }
-
   /// ***Controllers */
   TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController bloodController = TextEditingController();
   TextEditingController phoneGroupController = TextEditingController();
   TextEditingController quantityGroupController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    bloodController.dispose();
+    dateController.dispose();
+    phoneGroupController.dispose();
+    quantityGroupController.dispose();
+  }
+
   var formKeyController = GlobalKey<FormState>(debugLabel: "form");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Container(
-          width: MediaQuery.of(context).size.width / 3,
-          child: ListView(
-            children: [
-              const UserAccountsDrawerHeader(
-                  accountName: Text("Client"), accountEmail: Text("")),
-              ListTile(
-                // ignore: prefer_const_constructors
-                leading: Icon(
-                  Icons.logout_rounded,
-                ),
-                title: const Text("Sign out"),
-                onTap: () => signOut(),
-              )
-            ],
-          ),
-        ),
-      ),
       backgroundColor: Colors.red,
       appBar: AppBar(
-        // leading: InkWell(),
+        // ignore: prefer_const_constructors
+        leading: InkWell(
+          child: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+          ),
+        ),
         toolbarHeight: 100,
         centerTitle: true,
+        elevation: 0,
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
         title: const Text("Make blood request"),
@@ -136,8 +128,10 @@ class _RequestDonorState extends State<RequestDonor> {
                         TextFormField(
                           controller: dateController,
                           keyboardType: TextInputType.datetime,
+                          onTap: () => showDatePickerObject(),
                           // ignore: prefer_const_constructors
-                          decoration: InputDecoration(
+                          readOnly: true,
+                          decoration: const InputDecoration(
                             labelText: "Date of Request",
                           ),
                           validator: (value) =>
@@ -214,15 +208,36 @@ class _RequestDonorState extends State<RequestDonor> {
         });
   }
 
+  Future<void> showDatePickerObject() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      // currentDate: ,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900, 1, 1, 1, 30),
+      lastDate: DateTime(2047, 9, 7, 17, 30),
+    );
+    if (picked != null) {
+      setState(() {
+        dateController.text = picked
+            .toString()
+            .replaceAll("00", "")
+            .replaceFirst("::", "")
+            .replaceFirst(".0", "");
+      });
+    }
+  }
+
   void onFormSubmit() {
     if (formKeyController.currentState!.validate()) {
-      Hive.box<Requests>(request).add(Requests(
-        name: nameController.text,
-        date: dateController.text,
-        group: bloodController.text,
-        phone: double.parse(phoneGroupController.text),
-        quantity: double.parse(quantityGroupController.text),
-      ));
+      Hive.box<Requests>(request).add(
+        Requests(
+          name: nameController.text,
+          date: dateController.text,
+          group: bloodController.text,
+          phone: double.parse(phoneGroupController.text),
+          quantity: double.parse(quantityGroupController.text),
+        ),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Your request was sent and saved successfully."),
@@ -232,6 +247,13 @@ class _RequestDonorState extends State<RequestDonor> {
         bloodController.text = "";
       });
       formKeyController.currentState!.reset();
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Client(),
+          fullscreenDialog: true,
+        ),
+      );
     }
   }
 }

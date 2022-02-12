@@ -62,6 +62,7 @@ class _ChooseSectionState extends State<ChooseSection> {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.transparent,
         toolbarHeight: 100,
         centerTitle: true,
@@ -70,7 +71,7 @@ class _ChooseSectionState extends State<ChooseSection> {
           fontSize: 38,
           fontWeight: FontWeight.w300,
         ),
-        title: const Text("Life Share"),
+        title: const Text("Life Save"),
         shadowColor: Colors.transparent,
       ),
       body: SafeArea(

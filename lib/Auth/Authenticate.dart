@@ -1,4 +1,5 @@
 import 'package:blood/Views/Home.dart';
+import 'package:blood/Views/index.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class Authenticate extends StatelessWidget {
             ],
           );
         }
-        return Home();
+        return const ManagerHome();
       },
     );
   }

@@ -1,19 +1,19 @@
 import 'dart:io';
 
 import 'package:blood/Auth/RegisterDonars.dart';
+import 'package:blood/Views/ViewRequests.dart';
 import 'package:blood/map/Map.dart';
-import 'package:blood/models/Donars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class ManagerHome extends StatefulWidget {
+  const ManagerHome({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<ManagerHome> createState() => _ManagerHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _ManagerHomeState extends State<ManagerHome> {
   FirebaseAuth auth = FirebaseAuth.instance;
   void signOutUser() async {
     Navigator.pop(context);
@@ -23,25 +23,54 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-
+      backgroundColor: Colors.red,
+      appBar: AppBar(
+        elevation: 0,
+        // ignore: prefer_const_constructors
+        titleTextStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w400,
+        ),
+        centerTitle: true,
+        toolbarHeight: 100,
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        title: const Text(
+          "Life Save ",
+        ),
+      ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.zero,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           // ignore: prefer_const_constructors
           decoration: BoxDecoration(
             color: Colors.grey[100],
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(50),
+            ),
           ),
 
           child: Padding(
             padding: const EdgeInsets.all(0),
             child: Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.height / 1.9,
-                child: const MapView(),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(200, 70))),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => RegisterDonar(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Register Donor",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ),
@@ -100,7 +129,7 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const Donars(),
+              builder: (context) => const ViewRequests(),
               fullscreenDialog: true,
             ),
           );
@@ -109,7 +138,7 @@ class _HomeState extends State<Home> {
         icon: Icon(
           Icons.pin_drop_rounded,
         ),
-        label: const Text("View Donors"),
+        label: const Text("View Requests"),
       ),
     );
   }

@@ -26,6 +26,7 @@ class Donars extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
+        elevation: 0,
         titleTextStyle: const TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.w400,
