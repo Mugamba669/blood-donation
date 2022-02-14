@@ -1,14 +1,14 @@
-import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/Views/Home.dart';
-import 'package:blood/map/Map.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Donar.dart';
 
+// ignore: must_be_immutable
 class Donars extends StatelessWidget {
-  const Donars({Key? key}) : super(key: key);
+  final String bloodGroup;
+  Donars({Key? key, required this.bloodGroup}) : super(key: key);
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
@@ -22,6 +22,8 @@ class Donars extends StatelessWidget {
     await launch(launchUri.toString());
   }
 
+  double latitude = 0.0;
+  double longitude = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +38,7 @@ class Donars extends StatelessWidget {
         leading: InkWell(
           child: const Icon(Icons.arrow_back_ios_new_rounded),
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const Client(),
-                fullscreenDialog: true,
-              ),
-            );
+            Navigator.of(context).pop();
           },
         ),
         backgroundColor: Colors.transparent,
@@ -68,35 +65,80 @@ class Donars extends StatelessWidget {
               if (box.values.isEmpty)
                 // ignore: curly_braces_in_flow_control_structures
                 return const Center(
-                  child: Text("Oops! No donors...."),
+                  child: Text("Oops! No donors yet...."),
                 );
               return ListView.builder(
                 itemCount: box.values.length,
                 itemBuilder: (context, index) {
                   Donar? currentContact = box.getAt(index);
 
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text(currentContact!.bloodGroup),
+                  return currentContact!.bloodGroup == bloodGroup
+                      ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => Home(
+                                        lat: currentContact.latitude,
+                                        long: currentContact.longitude,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                leading: CircleAvatar(
+                                  child: Text(currentContact.bloodGroup),
+                                ),
+                                title: Text(currentContact.name),
+                                subtitle: Text(currentContact.contact),
+                                trailing: InkWell(
+                                  onTap: () {
+                                    _makePhoneCall(currentContact.contact);
+                                  },
+                                  child: const CircleAvatar(
+                                      child: Icon(Icons.phone)),
+                                ),
+                              ),
+                            ),
                           ),
-                          title: Text(currentContact.name),
-                          subtitle: Text(currentContact.contact),
-                          trailing: InkWell(
-                            onTap: () {
-                              _makePhoneCall(currentContact.contact);
-                            },
-                            child: const CircleAvatar(child: Icon(Icons.phone)),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => Home(
+                                        lat: currentContact.latitude,
+                                        long: currentContact.longitude,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                leading: CircleAvatar(
+                                  child: Text(currentContact.bloodGroup),
+                                ),
+                                title: Text(currentContact.name),
+                                subtitle: Text(currentContact.contact),
+                                trailing: InkWell(
+                                  onTap: () {
+                                    _makePhoneCall(currentContact.contact);
+                                  },
+                                  child: const CircleAvatar(
+                                      child: Icon(Icons.phone)),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  );
+                        );
                 },
               );
             },
@@ -112,7 +154,10 @@ class Donars extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const Home(),
+                  builder: (context) => Home(
+                    lat: latitude,
+                    long: longitude,
+                  ),
                 ),
               );
             },

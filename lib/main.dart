@@ -26,6 +26,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.android,
   );
+  // FirebaseAuth.instance.app.
   runApp(const App());
 }
 
@@ -67,7 +68,7 @@ class _ChooseSectionState extends State<ChooseSection> {
           fontSize: 38,
           fontWeight: FontWeight.w300,
         ),
-        title: const Text("Life Save"),
+        title: const Text("Save a Life"),
         shadowColor: Colors.transparent,
       ),
       body: SafeArea(
@@ -105,7 +106,7 @@ class _ChooseSectionState extends State<ChooseSection> {
                           child: InkWell(
                             child: const CircleAvatar(
                               radius: 60,
-                              child: Text("Client"),
+                              child: Text("Reciptient"),
                             ),
                             onTap: () {
                               Navigator.push(
@@ -137,7 +138,7 @@ class _ChooseSectionState extends State<ChooseSection> {
                             },
                             child: const CircleAvatar(
                               radius: 60,
-                              child: Text("Manager"),
+                              child: Text("Donor"),
                             ),
                           ),
                           endRadius: 100),

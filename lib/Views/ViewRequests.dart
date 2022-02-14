@@ -28,8 +28,7 @@ class _ViewRequestsState extends State<ViewRequests> {
             Icons.arrow_back_ios_new_rounded,
           ),
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const Client()));
+            Navigator.of(context).pop();
           },
         ),
         title: const Text("View Request"),

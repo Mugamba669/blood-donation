@@ -36,7 +36,7 @@ class _ManagerHomeState extends State<ManagerHome> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
         title: const Text(
-          "Life Save ",
+          " Save Life ",
         ),
       ),
       body: SafeArea(
@@ -66,7 +66,7 @@ class _ManagerHomeState extends State<ManagerHome> {
                   );
                 },
                 child: const Text(
-                  "Register Donor",
+                  "Donation details",
                   style: TextStyle(
                     fontSize: 20,
                   ),
@@ -96,7 +96,7 @@ class _ManagerHomeState extends State<ManagerHome> {
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.person_add_alt_1_rounded),
-                title: const Text('Register Donors'),
+                title: const Text('Donation Details'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.of(context).push(

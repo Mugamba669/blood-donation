@@ -1,4 +1,5 @@
 import 'package:blood/Client/Views/Home.dart';
+import 'package:blood/Client/Views/RequestDonor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -30,8 +31,8 @@ class ClientAuth extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   action == AuthAction.signIn
-                      ? 'Welcome to Blood Donation App! Please sign in to continue.'
-                      : 'Welcome to Blood Donation App! Please create an account to continue',
+                      ? 'Login to your account.'
+                      : 'Register as Recipient.',
                 ),
               );
             },
@@ -40,7 +41,7 @@ class ClientAuth extends StatelessWidget {
               return const Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: Text(
-                  'By signing in, you agree to our terms and conditions of our shopping services.',
+                  'By signing in, you agree to our terms and conditions.',
                   style: TextStyle(color: Colors.grey),
                 ),
               );
@@ -53,7 +54,7 @@ class ClientAuth extends StatelessWidget {
             ],
           );
         }
-        return Client();
+        return const RequestDonor();
       },
     );
   }

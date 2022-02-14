@@ -48,7 +48,7 @@ class _RegisterDonarState extends State<RegisterDonar> {
           color: Colors.white,
         ),
         title: const Text(
-          "Register Donor",
+          "Donation details",
         ),
       ),
       body: SafeArea(

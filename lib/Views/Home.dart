@@ -7,7 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final double lat;
+  final double long;
+  const Home({
+    Key? key,
+    required this.lat,
+    required this.long,
+  }) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -40,10 +46,13 @@ class _HomeState extends State<Home> {
             color: Colors.grey[100],
           ),
 
-          child: const Padding(
-            padding: EdgeInsets.all(0),
+          child: Padding(
+            padding: const EdgeInsets.all(0),
             child: Center(
-              child: MapView(),
+              child: MapView(
+                latitude: widget.lat,
+                longitude: widget.long,
+              ),
             ),
           ),
         ),
@@ -101,7 +110,9 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const Donars(),
+              builder: (context) => Donars(
+                bloodGroup: '',
+              ),
               fullscreenDialog: true,
             ),
           );

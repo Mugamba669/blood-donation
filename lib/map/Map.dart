@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  final double latitude;
+  final double longitude;
+  const MapView({Key? key, required this.latitude, required this.longitude})
+      : super(key: key);
 
   @override
   State<MapView> createState() => __MapViewState();
@@ -26,15 +29,16 @@ class __MapViewState extends State<MapView> {
           position: const LatLng(0.347596, 32.582520),
           draggable: true,
           onTap: () {
-            print("Ngobe");
+            // print("Ngobe");
           },
         ),
         Marker(
+          icon: BitmapDescriptor.defaultMarker,
           markerId: const MarkerId("Seguku"),
-          position: const LatLng(0.349596, 32.782520),
+          position: LatLng(widget.latitude, widget.longitude),
           draggable: true,
           onTap: () {
-            print("Ngobe");
+            // print("Ngobe");
           },
         )
       },

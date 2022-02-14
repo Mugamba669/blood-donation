@@ -1,7 +1,9 @@
 import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
+import 'package:blood/models/Donars.dart';
 import 'package:blood/models/Request.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestDonor extends StatefulWidget {
@@ -41,12 +43,7 @@ class _RequestDonorState extends State<RequestDonor> {
             Icons.arrow_back_ios_new_rounded,
           ),
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const Client(),
-                fullscreenDialog: true,
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
         toolbarHeight: 100,
@@ -110,6 +107,8 @@ class _RequestDonorState extends State<RequestDonor> {
                         TextFormField(
                           autofocus: true,
                           keyboardType: TextInputType.phone,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          maxLength: 10,
                           controller: phoneGroupController,
                           // ignore: prefer_const_constructors
                           decoration: InputDecoration(
@@ -258,7 +257,9 @@ class _RequestDonorState extends State<RequestDonor> {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const Client(),
+          builder: (context) => Donars(
+            bloodGroup: bloodController.text,
+          ),
           fullscreenDialog: true,
         ),
       );
