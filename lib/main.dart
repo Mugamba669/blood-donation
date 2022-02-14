@@ -1,10 +1,6 @@
-import 'dart:ui';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:blood/Auth/Authenticate.dart';
-import 'package:blood/Auth/RegisterDonars.dart';
 import 'package:blood/Client/Auth/ClientAuth.dart';
-import 'package:blood/Client/Views/RequestDonor.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/firebase_options.dart';
 import 'package:blood/models/Donar.dart';

@@ -1,4 +1,5 @@
 import 'package:blood/Global/Global.dart';
+import 'package:blood/Views/index.dart';
 import 'package:blood/models/Donar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,11 @@ class _RegisterDonarState extends State<RegisterDonar> {
   double? latitude;
   String? group;
   String? phoneNumber;
+  @override
+  void dispose() {
+    bloodGroupController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +116,8 @@ class _RegisterDonarState extends State<RegisterDonar> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.phone,
                         initialValue: "",
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        maxLength: 10,
                         decoration: const InputDecoration(
                           labelText: "Phone number",
                         ),
@@ -251,6 +259,12 @@ class _RegisterDonarState extends State<RegisterDonar> {
         bloodGroupController.text = "";
       });
       widget.formKey.currentState!.reset();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const ManagerHome(),
+          fullscreenDialog: true,
+        ),
+      );
     }
   }
 }

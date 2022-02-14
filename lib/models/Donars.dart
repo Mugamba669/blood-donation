@@ -1,3 +1,4 @@
+import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/Views/Home.dart';
 import 'package:blood/map/Map.dart';
@@ -35,7 +36,12 @@ class Donars extends StatelessWidget {
         leading: InkWell(
           child: const Icon(Icons.arrow_back_ios_new_rounded),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const Client(),
+                fullscreenDialog: true,
+              ),
+            );
           },
         ),
         backgroundColor: Colors.transparent,

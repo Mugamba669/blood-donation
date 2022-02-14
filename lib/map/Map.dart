@@ -20,6 +20,24 @@ class __MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+      markers: {
+        Marker(
+          markerId: const MarkerId("Ngobe"),
+          position: const LatLng(0.347596, 32.582520),
+          draggable: true,
+          onTap: () {
+            print("Ngobe");
+          },
+        ),
+        Marker(
+          markerId: const MarkerId("Seguku"),
+          position: const LatLng(0.349596, 32.782520),
+          draggable: true,
+          onTap: () {
+            print("Ngobe");
+          },
+        )
+      },
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
         target: _center,

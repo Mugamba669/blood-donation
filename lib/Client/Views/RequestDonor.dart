@@ -40,6 +40,14 @@ class _RequestDonorState extends State<RequestDonor> {
           child: const Icon(
             Icons.arrow_back_ios_new_rounded,
           ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const Client(),
+                fullscreenDialog: true,
+              ),
+            );
+          },
         ),
         toolbarHeight: 100,
         centerTitle: true,

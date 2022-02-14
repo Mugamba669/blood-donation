@@ -14,6 +14,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   FirebaseAuth auth = FirebaseAuth.instance;
   void signOutUser() async {
     Navigator.pop(context);
@@ -35,14 +40,10 @@ class _HomeState extends State<Home> {
             color: Colors.grey[100],
           ),
 
-          child: Padding(
-            padding: const EdgeInsets.all(0),
+          child: const Padding(
+            padding: EdgeInsets.all(0),
             child: Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.height / 1.9,
-                child: const MapView(),
-              ),
+              child: MapView(),
             ),
           ),
         ),
