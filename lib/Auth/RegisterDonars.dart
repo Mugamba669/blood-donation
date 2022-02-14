@@ -1,8 +1,11 @@
-import 'package:blood/Global/Global.dart';
-import 'package:blood/Views/index.dart';
-import 'package:blood/models/Donar.dart';
+import 'dart:io';
+
+import 'package:blood/Views/ViewRequests.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: unused_import
 import 'package:hive_flutter/adapters.dart';
 
 class RegisterDonar extends StatefulWidget {
@@ -15,6 +18,9 @@ class RegisterDonar extends StatefulWidget {
 }
 
 class _RegisterDonarState extends State<RegisterDonar> {
+  CollectionReference<Map<String, dynamic>> store =
+      FirebaseFirestore.instance.collection("donars");
+
   var bloodGroupController = TextEditingController();
   String? name;
   double? longitude;
@@ -28,18 +34,24 @@ class _RegisterDonarState extends State<RegisterDonar> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // store.add(data)
+  }
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  void signOutUser() async {
+    await auth.signOut();
+    Navigator.pop(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-          ),
-        ),
         toolbarHeight: 80,
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
@@ -188,6 +200,53 @@ class _RegisterDonarState extends State<RegisterDonar> {
           ),
         ),
       ),
+      drawer: Container(
+        width: MediaQuery.of(context).size.width / 1.3,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.zero,
+        child: Drawer(
+          child: ListView(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Image.asset("images/donate.png"),
+                ),
+                accountName: Text("Signed in as ${auth.currentUser!.email}"),
+                accountEmail: const Text(""),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.person_add_alt_1_rounded),
+                title: const Text('View request details'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      // ignore: prefer_const_constructors
+                      builder: (context) => ViewRequests(),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out'),
+                onTap: () => signOutUser(),
+              ),
+              const Divider(),
+              ListTile(
+                  leading: const Icon(Icons.exit_to_app_rounded),
+                  title: const Text('Quit'),
+                  onTap: () => exit(0)),
+              const Divider(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -238,14 +297,14 @@ class _RegisterDonarState extends State<RegisterDonar> {
 
   void onFormSubmit() {
     if (widget.formKey.currentState!.validate()) {
-      Box<Donar> contactsBox = Hive.box<Donar>(dnt);
-      contactsBox.add(Donar(
-        name: name!,
-        bloodGroup: bloodGroupController.text,
-        latitude: latitude!,
-        contact: phoneNumber!,
-        longitude: longitude!,
-      ));
+      var storage = {
+        'name': name,
+        'group': bloodGroupController.text,
+        'latitude': latitude,
+        'longitude': longitude,
+        'contact': phoneNumber
+      };
+      store.add(storage);
       // widget.formKey.currentState!.save();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -261,7 +320,8 @@ class _RegisterDonarState extends State<RegisterDonar> {
       widget.formKey.currentState!.reset();
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const ManagerHome(),
+          // ignore: prefer_const_constructors
+          builder: (context) => ViewRequests(),
           fullscreenDialog: true,
         ),
       );

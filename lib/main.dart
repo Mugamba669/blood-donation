@@ -99,26 +99,27 @@ class _ChooseSectionState extends State<ChooseSection> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: AvatarGlow(
-                          duration: const Duration(seconds: 3),
-                          curve: Curves.bounceInOut,
-                          showTwoGlows: true,
-                          glowColor: Colors.red[300]!,
-                          child: InkWell(
-                            child: const CircleAvatar(
-                              radius: 60,
-                              child: Text("Reciptient"),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ClientAuth(),
-                                  fullscreenDialog: true,
-                                ),
-                              );
-                            },
+                        duration: const Duration(seconds: 3),
+                        curve: Curves.bounceInOut,
+                        showTwoGlows: true,
+                        glowColor: Colors.red[300]!,
+                        child: InkWell(
+                          child: const CircleAvatar(
+                            radius: 60,
+                            child: Text("Reciptient"),
                           ),
-                          endRadius: 120),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ClientAuth(),
+                                fullscreenDialog: true,
+                              ),
+                            );
+                          },
+                        ),
+                        endRadius: 120,
+                      ),
                     ),
                   ),
                   Padding(

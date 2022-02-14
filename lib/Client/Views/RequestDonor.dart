@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:blood/Client/Views/Home.dart';
 import 'package:blood/Global/Global.dart';
 import 'package:blood/models/Donars.dart';
 import 'package:blood/models/Request.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,20 +36,17 @@ class _RequestDonorState extends State<RequestDonor> {
   }
 
   var formKeyController = GlobalKey<FormState>(debugLabel: "form");
+  FirebaseAuth auth = FirebaseAuth.instance;
+  void signOutUser() async {
+    await auth.signOut();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
-        // ignore: prefer_const_constructors
-        leading: InkWell(
-          child: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
         toolbarHeight: 100,
         centerTitle: true,
         elevation: 0,
@@ -167,6 +168,55 @@ class _RequestDonorState extends State<RequestDonor> {
           ),
         ),
       ),
+      drawer: Container(
+        width: MediaQuery.of(context).size.width / 1.3,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.zero,
+        child: Drawer(
+          child: ListView(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Image.asset("images/donate.png"),
+                ),
+                accountName: Text("Signed in as ${auth.currentUser!.email}"),
+                accountEmail: const Text(""),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.person_add_alt_1_rounded),
+                title: const Text('View available donars'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      // ignore: prefer_const_constructors
+                      builder: (context) => Donars(
+                        bloodGroup: bloodController.text,
+                      ),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out'),
+                onTap: () => signOutUser(),
+              ),
+              const Divider(),
+              ListTile(
+                  leading: const Icon(Icons.exit_to_app_rounded),
+                  title: const Text('Quit'),
+                  onTap: () => exit(0)),
+              const Divider(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -236,15 +286,15 @@ class _RequestDonorState extends State<RequestDonor> {
 
   void onFormSubmit() {
     if (formKeyController.currentState!.validate()) {
-      Hive.box<Requests>(request).add(
-        Requests(
-          name: nameController.text,
-          date: dateController.text,
-          group: bloodController.text,
-          phone: double.parse(phoneGroupController.text),
-          quantity: double.parse(quantityGroupController.text),
-        ),
-      );
+      /// Pushing all the request to te database
+      FirebaseFirestore.instance.collection('requests').add({
+        'name': nameController.text,
+        'date': dateController.text,
+        'group': bloodController.text,
+        'phone': phoneGroupController.text,
+        'quantity': quantityGroupController.text
+      });
+      /*********** */
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Your request was sent and saved successfully."),

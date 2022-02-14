@@ -1,5 +1,5 @@
-import 'package:blood/Views/Home.dart';
-import 'package:blood/Views/index.dart';
+import 'package:blood/Auth/RegisterDonars.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +55,7 @@ class Authenticate extends StatelessWidget {
             ],
           );
         }
-        return const ManagerHome();
+        return RegisterDonar();
       },
     );
   }

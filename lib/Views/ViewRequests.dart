@@ -1,8 +1,7 @@
-import 'package:blood/Client/Views/Home.dart';
-import 'package:blood/Global/Global.dart';
-import 'package:blood/models/Request.dart';
+// ignore_for_file: curly_braces_in_flow_control_structures
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class ViewRequests extends StatefulWidget {
   const ViewRequests({Key? key}) : super(key: key);
@@ -12,6 +11,10 @@ class ViewRequests extends StatefulWidget {
 }
 
 class _ViewRequestsState extends State<ViewRequests> {
+  // ignore: slash_for_doc_comments
+  /****Displays the requests sent */
+  CollectionReference<Map<String, dynamic>> requestStore =
+      FirebaseFirestore.instance.collection('requests');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,29 +55,33 @@ class _ViewRequestsState extends State<ViewRequests> {
           ),
         ),
         child: Center(
-          child: ValueListenableBuilder(
-              valueListenable: Hive.box<Requests>(request).listenable(),
-              builder: (context, Box<Requests> box, _) {
-                if (box.values.isEmpty) {
-                  return const Center(
-                    child: Text("There are requests yet..."),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: box.values.length,
-                  itemBuilder: (context, index) {
-                    // ignore: unused_local_variable
-                    Requests? requestData = box.getAt(index);
-                    return Card(
-                      child: ListTile(
-                        subtitle: Text(requestData!.date),
-                        title: Text(requestData.name),
-                        trailing: Text("${requestData.quantity}"),
-                      ),
-                    );
-                  },
+          child: StreamBuilder(
+            stream: requestStore.snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
                 );
-              }),
+
+              return (!snapshot.hasData)
+                  ? const Center(
+                      child: Text("No records found"),
+                    )
+                  : ListView(
+                      children: snapshot.data!.docs
+                          .map((document) => Card(
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(document['group']),
+                                  ),
+                                  subtitle: Text(document['date']),
+                                  title: Text(document['name']),
+                                  trailing: Text(document['quantity']),
+                                ),
+                              ))
+                          .toList());
+            },
+          ),
         ),
       ),
     );

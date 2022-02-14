@@ -1,9 +1,9 @@
-import 'package:blood/Global/Global.dart';
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:blood/Views/Home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Donar.dart';
 
 // ignore: must_be_immutable
 class Donars extends StatelessWidget {
@@ -11,10 +11,6 @@ class Donars extends StatelessWidget {
   Donars({Key? key, required this.bloodGroup}) : super(key: key);
 
   Future<void> _makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
@@ -59,88 +55,56 @@ class Donars extends StatelessWidget {
               topRight: Radius.circular(50),
             ),
           ),
-          child: ValueListenableBuilder(
-            valueListenable: Hive.box<Donar>(dnt).listenable(),
-            builder: (context, Box<Donar> box, _) {
-              if (box.values.isEmpty)
-                // ignore: curly_braces_in_flow_control_structures
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('donars').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              if (!snapshot.hasData)
                 return const Center(
                   child: Text("Oops! No donors yet...."),
                 );
-              return ListView.builder(
-                itemCount: box.values.length,
-                itemBuilder: (context, index) {
-                  Donar? currentContact = box.getAt(index);
-
-                  return currentContact!.bloodGroup == bloodGroup
-                      ? Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => Home(
-                                        lat: currentContact.latitude,
-                                        long: currentContact.longitude,
-                                      ),
+              else
+                return ListView(
+                    children: snapshot.data!.docs
+                        .map((response) => Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => Home(
+                                            lat:
+                                                response['latitude'].toString(),
+                                            long: response['longitude']
+                                                .toString(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    leading: CircleAvatar(
+                                      child: Text(response['group']),
                                     ),
-                                  );
-                                },
-                                leading: CircleAvatar(
-                                  child: Text(currentContact.bloodGroup),
-                                ),
-                                title: Text(currentContact.name),
-                                subtitle: Text(currentContact.contact),
-                                trailing: InkWell(
-                                  onTap: () {
-                                    _makePhoneCall(currentContact.contact);
-                                  },
-                                  child: const CircleAvatar(
-                                      child: Icon(Icons.phone)),
+                                    title: Text(response['name']),
+                                    subtitle: Text(response['contact']),
+                                    trailing: InkWell(
+                                      onTap: () {
+                                        _makePhoneCall(response['contact']);
+                                      },
+                                      child: const CircleAvatar(
+                                          child: Icon(Icons.phone)),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => Home(
-                                        lat: currentContact.latitude,
-                                        long: currentContact.longitude,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                leading: CircleAvatar(
-                                  child: Text(currentContact.bloodGroup),
-                                ),
-                                title: Text(currentContact.name),
-                                subtitle: Text(currentContact.contact),
-                                trailing: InkWell(
-                                  onTap: () {
-                                    _makePhoneCall(currentContact.contact);
-                                  },
-                                  child: const CircleAvatar(
-                                      child: Icon(Icons.phone)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                },
-              );
+                            ))
+                        .toList());
             },
           ),
         ),

@@ -7,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  final double lat;
-  final double long;
+  final dynamic lat;
+  final dynamic long;
   const Home({
     Key? key,
     required this.lat,
